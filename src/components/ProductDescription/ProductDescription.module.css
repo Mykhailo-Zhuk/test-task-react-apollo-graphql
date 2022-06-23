@@ -1,0 +1,146 @@
+:root {
+  --cbButton-grey: #d3d2d5;
+  --cbButton-brown: #2b2b2b;
+  --cbButton-green: #0f6450;
+  --cbButtonBorder: #5ece7b;
+}
+.configWrapper {
+  margin: 20px 100px 0 100px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-evenly;
+  gap: 20px;
+}
+.configWrapper img {
+  object-fit: contain;
+  width: 100%;
+  height: 100%;
+}
+.leftPhotoBlock {
+  flex: 0 1 10%;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  justify-content: flex-start;
+}
+.leftPhotoItem {
+  width: 79px;
+  height: 80px;
+}
+.mainPhotoBlock {
+  flex: 0 1 50%;
+  width: 610px;
+  height: 511px;
+}
+.photoConfigBlock {
+  flex: 0 1 22%;
+  margin: 0 auto;
+  width: 315px;
+  height: 595px;
+}
+.configTitle {
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 27px;
+}
+.rowTitle {
+  font-family: 'Roboto Condensed';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 18px;
+  color: var(--product-text-color);
+  text-transform: uppercase;
+}
+/* Size block */
+.sizeRowList {
+  display: flex;
+  gap: 12px;
+}
+.sizeRowItem {
+  width: 63px;
+  height: 45px;
+  cursor: pointer;
+  filter: drop-shadow(-5px 4px 4px rgba(0, 0, 0, 0.25));
+  -webkit-filter: drop-shadow(-5px 4px 4px rgba(0, 0, 0, 0.25));
+}
+.sizeRowItem button {
+  width: 100%;
+  height: 100%;
+  text-transform: uppercase;
+  background-color: var(--nav-bg-color);
+  border: 1px solid var(--product-text-color);
+  cursor: pointer;
+}
+.sizeRowItem button:hover {
+  background-color: var(--product-text-color);
+  color: var(--nav-bg-color);
+}
+/* Color block */
+.colorRowList {
+  display: flex;
+  gap: 8px;
+}
+.colorRowList li {
+  width: 36px;
+  height: 36px;
+}
+.colorRowItem button {
+  width: 100%;
+  height: 100%;
+  border: none;
+  filter: drop-shadow(-5px 4px 4px rgba(0, 0, 0, 0.25));
+  -webkit-filter: drop-shadow(-5px 4px 4px rgba(0, 0, 0, 0.25));
+}
+.colorRowItem button:hover {
+  border: 1px solid var(--cbButtonBorder);
+}
+/* Currency item */
+.currencyItem {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 18px;
+  color: var(--product-text-color);
+}
+/* Add to cart */
+.configAddToCartButton {
+  display: flex;
+  box-sizing: border-box;
+  max-width: 292px;
+  max-height: 52px;
+  background-color: var(--cbButtonBorder);
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0 40px 0;
+  filter: drop-shadow(-5px 4px 4px rgba(0, 0, 0, 0.25));
+  -webkit-filter: drop-shadow(-5px 4px 4px rgba(0, 0, 0, 0.25));
+}
+.configAddToCartButton button {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 120%;
+  color: var(--nav-bg-color);
+  background: none;
+  border: none;
+  text-align: center;
+  text-transform: uppercase;
+  padding: 16px 32px 16px 32px;
+  cursor: pointer;
+}
+.configAddToCartButton:hover {
+  border: 1px solid var(--nav-icon-color);
+}
+.configDescriptionBlock {
+  width: 292px;
+  height: 103px;
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 159.96%;
+  color: var(--product-text-color);
+  overflow-y: scroll;
+}
