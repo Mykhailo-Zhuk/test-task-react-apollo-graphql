@@ -26,7 +26,6 @@ export class AllProducts extends Component {
     }
   }
   render() {
-    console.log(this.props);
     return (
       <div>
         <div className={styles.productList}>

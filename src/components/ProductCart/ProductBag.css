@@ -12,15 +12,16 @@
   line-height: 40px;
   text-transform: uppercase;
   color: var(--nav-icon-color);
+  padding: 0px 5px;
 }
 .productBagBlock {
   display: flex;
   flex-direction: row;
-  height: fit-content;
+  max-height: 235px;
   width: 100%;
   justify-content: space-between;
   align-items: stretch;
-  padding: 10px 0;
+  padding: 10px 5px;
   gap: 24px;
   overflow: auto;
   color: var(--nav-icon-color);
@@ -34,7 +35,7 @@
   justify-content: space-between;
   padding: 0px;
   gap: 4px;
-  height: fit-content;
+  max-height: 235px;
   width: fit-content;
 }
 .productBagDescription {
@@ -50,12 +51,12 @@
 /* Image block*/
 .productBagImage {
   position: relative;
-  flex: 1 0 30%;
+  flex: 1 0 25%;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 325px;
-  height: 400px;
+  width: fit-content;
+  max-height: 235px;
 }
 .productBagImage img {
   width: 100%;
@@ -143,6 +144,16 @@
   color: var(--nav-bg-color);
   background: var(--nav-icon-color);
   outline: 1px solid var(--nav-icon-color);
+  transition: all 1s;
+  -webkit-transition: all 1s;
+  -moz-transition: all 1s;
+  -ms-transition: all 1s;
+  -o-transition: all 1s;
+  transform: scale(1.2);
+  -webkit-transform: scale(1.2);
+  -moz-transform: scale(1.2);
+  -ms-transform: scale(1.2);
+  -o-transform: scale(1.2);
 }
 /* Color block */
 .productBagConfigColorRow {
@@ -177,8 +188,16 @@
 .productBagColorItem button:hover,
 .productBagColorItem button:focus {
   outline: 1px solid var(--nav-font-color);
-  width: 36px;
-  height: 36px;
+  transition: all 1s;
+  -webkit-transition: all 1s;
+  -moz-transition: all 1s;
+  -ms-transition: all 1s;
+  -o-transition: all 1s;
+  transform: scale(1.2);
+  -webkit-transform: scale(1.2);
+  -moz-transform: scale(1.2);
+  -ms-transform: scale(1.2);
+  -o-transform: scale(1.2);
 }
 /* Amount button block */
 .productBagAmountButtons {
@@ -188,7 +207,7 @@
   align-items: center;
   padding: 0px;
   gap: 32px;
-  width: fit-content;
+  /* width: fit-content; */
   height: 100%;
 }
 .productBagAmountIncrease,
@@ -209,11 +228,33 @@
 }
 .productBagAmountIncrease:hover {
   outline: 1px solid green;
+  color: green;
   border: none;
+  transition: all 1s;
+  -webkit-transition: all 1s;
+  -moz-transition: all 1s;
+  -ms-transition: all 1s;
+  -o-transition: all 1s;
+  transform: scale(1.1);
+  -webkit-transform: scale(1.1);
+  -moz-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  -o-transform: scale(1.1);
 }
 .productBagAmountDecrease:hover {
   outline: 1px solid red;
+  color: red;
   border: none;
+  transition: all 1s;
+  -webkit-transition: all 1s;
+  -moz-transition: all 1s;
+  -ms-transition: all 1s;
+  -o-transition: all 1s;
+  transform: scale(1.1);
+  -webkit-transform: scale(1.1);
+  -moz-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  -o-transform: scale(1.1);
 }
 .productBagAmount {
   width: fit-content;
@@ -276,6 +317,10 @@
 }
 .productBagImageCaretRight {
   transform: rotate(-180deg);
+  -webkit-transform: rotate(-180deg);
+  -moz-transform: rotate(-180deg);
+  -ms-transform: rotate(-180deg);
+  -o-transform: rotate(-180deg);
 }
 .productBagImageCaretLeft img,
 .productBagImageCaretRight img {
@@ -325,6 +370,20 @@
   line-height: 120%;
   background: var(--cbButtonBorder);
   color: var(--nav-bg-color);
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  -webkit-filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+}
+.productBagTotalOrderButton button:hover {
+  transition: all 1s;
+  -webkit-transition: all 1s;
+  -moz-transition: all 1s;
+  -ms-transition: all 1s;
+  -o-transition: all 1s;
+  transform: scale(0.98);
+  -webkit-transform: scale(0.98);
+  -moz-transform: scale(0.98);
+  -ms-transform: scale(0.98);
+  -o-transform: scale(0.98);
 }
 .productBagTotalResult {
   display: flex;

@@ -24,6 +24,7 @@ p {
   display: flex;
 }
 .navCategoryItem {
+  box-sizing: border-box;
   text-transform: uppercase;
   font-size: 14px;
   line-height: 15px;
@@ -32,6 +33,7 @@ p {
 }
 .nav_active {
   color: var(--nav-font-color);
+  padding-bottom: 8px;
   border-bottom: 3px solid var(--nav-font-color);
 }
 .navCartBlock {
@@ -47,13 +49,13 @@ p {
   text-align: center;
   position: absolute;
   width: 90px;
-  height: 85px;
+  height: 115px;
   top: 30px;
   right: -15px;
   background-color: var(--nav-bg-color);
   filter: drop-shadow(0px 4px 35px rgba(168, 172, 176, 0.19));
   -webkit-filter: drop-shadow(0px 4px 35px rgba(168, 172, 176, 0.19));
-  z-index: 4;
+  z-index: 10;
 }
 .navCurrencyCharacter ul li:hover {
   background-color: var(--currency-list);
@@ -130,6 +132,7 @@ p {
   padding: 0px;
   gap: 8px;
   overflow: auto;
+  padding: 3px 3px;
 }
 .productCartConfig {
   display: flex;
@@ -218,12 +221,27 @@ p {
   text-align: center;
   color: var(--nav-icon-color);
   text-transform: uppercase;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
 }
 .productCartSizeRowItem button:hover,
 .productCartSizeRowItem button:focus {
   color: var(--nav-bg-color);
   background: var(--nav-icon-color);
   border: 1px solid var(--nav-icon-color);
+  transition: all 1s;
+  -webkit-transition: all 1s;
+  -moz-transition: all 1s;
+  -ms-transition: all 1s;
+  -o-transition: all 1s;
+  transform: scale(1.2);
+  -webkit-transform: scale(1.2);
+  -moz-transform: scale(1.2);
+  -ms-transform: scale(1.2);
+  -o-transform: scale(1.2);
 }
 .productCartConfigColorRow {
   display: flex;
@@ -255,8 +273,16 @@ p {
 .productCartColorItem button:hover,
 .productCartColorItem button:focus {
   border: 1px solid var(--nav-font-color);
-  width: 24px;
-  height: 24px;
+  transition: all 1s;
+  -webkit-transition: all 1s;
+  -moz-transition: all 1s;
+  -ms-transition: all 1s;
+  -o-transition: all 1s;
+  transform: scale(1.2);
+  -webkit-transform: scale(1.2);
+  -moz-transform: scale(1.2);
+  -ms-transform: scale(1.2);
+  -o-transform: scale(1.2);
 }
 /* Cart amount buttons */
 .productCartAmountButtons {
@@ -264,28 +290,40 @@ p {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding: 0px;
+  padding: 10px 0px;
   gap: 32px;
   width: 24px;
   height: 190px;
 }
 .productCartAmountIncrease,
 .productCartAmountDecrease {
-  border: 1px solid var(--nav-icon-color);
   width: 24px;
   height: 24px;
   cursor: pointer;
-  border-radius: 7px;
-  -webkit-border-radius: 7px;
-  -moz-border-radius: 7px;
-  -ms-border-radius: 7px;
-  -o-border-radius: 7px;
-}
-.productCartAmountIncrease button,
-.productCartAmountDecrease button {
   border: none;
-  width: 100%;
-  height: 100%;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  background-color: rgb(211, 210, 213, 0.7);
+  filter: drop-shadow(0px 0px 6px rgba(0, 0, 0, 4.25));
+  -webkit-filter: drop-shadow(0px 0px 6px rgba(0, 0, 0, 4.25));
+}
+.productCartAmountIncrease:hover,
+.productCartAmountIncrease:active,
+.productCartAmountDecrease:hover,
+.productCartAmountDecrease:active {
+  transition: all 1s;
+  -webkit-transition: all 1s;
+  -moz-transition: all 1s;
+  -ms-transition: all 1s;
+  -o-transition: all 1s;
+  transform: scale(1.2);
+  -webkit-transform: scale(1.2);
+  -moz-transform: scale(1.2);
+  -ms-transform: scale(1.2);
+  -o-transform: scale(1.2);
 }
 .productCartAmount {
   width: 8px;
@@ -342,6 +380,11 @@ p {
   -moz-transition: all 1s;
   -ms-transition: all 1s;
   -o-transition: all 1s;
+  transform: scale(1.7) rotate(45deg);
+  -webkit-transform: scale(1.7) rotate(45deg);
+  -moz-transform: scale(1.7) rotate(45deg);
+  -ms-transform: scale(1.7) rotate(45deg);
+  -o-transform: scale(1.7) rotate(45deg);
 }
 .productCartTotalPrice {
   width: 100%;
@@ -397,6 +440,17 @@ p {
 .pcCheckOutButton:hover {
   color: var(--nav-bg-color);
   background-color: var(--nav-font-color);
+  border: none;
+  transition: all 1s;
+  -webkit-transition: all 1s;
+  -moz-transition: all 1s;
+  -ms-transition: all 1s;
+  -o-transition: all 1s;
+  transform: scale(0.98);
+  -webkit-transform: scale(0.98);
+  -moz-transform: scale(0.98);
+  -ms-transform: scale(0.98);
+  -o-transform: scale(0.98);
 }
 /* Out of stock */
 .productCartOutOfStock {

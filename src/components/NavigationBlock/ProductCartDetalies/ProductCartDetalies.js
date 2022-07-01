@@ -5,7 +5,7 @@ export default class ProductCartDetalies extends Component {
   constructor() {
     super();
     this.state = {
-      counter: 0,
+      counter: 1,
       priceOfProduct: 0,
     };
   }
@@ -25,23 +25,27 @@ export default class ProductCartDetalies extends Component {
   };
 
   componentDidMount() {
-    this.setState({
-      priceOfProduct: Number(this.props.productItem.price),
-    });
+    this.setState({ ...this.state, priceOfProduct: Number(this.props.productItem.price) });
     this.props.totalDecreasePriceHandler(this.state.priceOfProduct);
   }
   getIdOfDeletedProduct = () => {
-    this.props.deleteProductFromCart(this.props.productItem.id);
+    this.props.deleteProductFromCart(+this.props.productItem.id, this.state.priceOfProduct);
   };
-
   render() {
+    const { convertIndex } = this.props.getCurrency.convertCurency;
+    const { symbol } = this.props.getCurrency.convertCurency;
+    const totalPrice = this.props.productItem.price;
+    const currentCurency = convertIndex * totalPrice;
     return (
       <div className="productCartBlock">
         <div className="productCartConfig">
           <div className="productCartDescription">
             <p className="productCartTitle">{this.props.productItem.title}</p>
             <div className="productCartConfigCurrencyBlock">
-              <div className="productCartCurrencyItem">${this.props.productItem.price}</div>
+              <div className="productCartCurrencyItem">
+                {symbol}
+                {currentCurency.toFixed(2)}
+              </div>
             </div>
             <div className="productCartConfigSizeRow">
               <p className="productCartRowTitle">Size:</p>

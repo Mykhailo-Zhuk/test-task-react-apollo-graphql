@@ -76,6 +76,16 @@
 .sizeRowItem button:hover {
   background-color: var(--product-text-color);
   color: var(--nav-bg-color);
+  transition: all 1s;
+  -webkit-transition: all 1s;
+  -moz-transition: all 1s;
+  -ms-transition: all 1s;
+  -o-transition: all 1s;
+  transform: scale(1.2);
+  -webkit-transform: scale(1.2);
+  -moz-transform: scale(1.2);
+  -ms-transform: scale(1.2);
+  -o-transform: scale(1.2);
 }
 /* Color block */
 .colorRowList {
@@ -95,6 +105,16 @@
 }
 .colorRowItem button:hover {
   border: 1px solid var(--cbButtonBorder);
+  transition: all 1s;
+  -webkit-transition: all 1s;
+  -moz-transition: all 1s;
+  -ms-transition: all 1s;
+  -o-transition: all 1s;
+  transform: scale(1.2);
+  -webkit-transform: scale(1.2);
+  -moz-transform: scale(1.2);
+  -ms-transform: scale(1.2);
+  -o-transform: scale(1.2);
 }
 /* Currency item */
 .currencyItem {
@@ -131,7 +151,16 @@
   cursor: pointer;
 }
 .configAddToCartButton:hover {
-  border: 1px solid var(--nav-icon-color);
+  transition: all 1s;
+  -webkit-transition: all 1s;
+  -moz-transition: all 1s;
+  -ms-transition: all 1s;
+  -o-transition: all 1s;
+  transform: scale(0.98);
+  -webkit-transform: scale(0.98);
+  -moz-transform: scale(0.98);
+  -ms-transform: scale(0.98);
+  -o-transform: scale(0.98);
 }
 .configDescriptionBlock {
   width: 292px;

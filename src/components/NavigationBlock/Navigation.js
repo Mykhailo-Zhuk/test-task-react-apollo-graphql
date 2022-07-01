@@ -13,24 +13,30 @@ export class NavigationBlock extends Component {
   constructor() {
     super();
     this.state = {
-      listOfTakingProduct: 0,
+      listOfTakingProduct: [],
       onClickCurrencyList: false,
-      numberOfProduct: 0,
+      amountOfProduct: 0,
       totalPrice: [],
-      convertCurency: { symbol: '$', convertIndex: 1 },
+      convertCurency: {},
     };
   }
   static getDerivedStateFromProps(props, state) {
-    if (props.targetProduct.idOfTargetProducts.length !== state.numberOfProduct) {
+    if (
+      props.targetProduct.idOfTargetProducts.size !== state.listOfTakingProduct.length ||
+      props.targetProduct.totalPrice.length !== state.totalPrice.length
+    ) {
       return {
-        numberOfProduct: props.targetProduct.idOfTargetProducts.length,
-        listOfTakingProduct: props.targetProduct.idOfTargetProducts,
+        amountOfProduct: props.targetProduct.numberOfProduct,
+        listOfTakingProduct: [...props.targetProduct.idOfTargetProducts],
+        totalPrice: props.targetProduct.totalPrice,
+      };
+    } else if (props.targetProduct.idOfTargetProducts.length === 0) {
+      return {
+        amountOfProduct: 0,
+        totalPrice: [],
       };
     }
     return null;
-  }
-  componentDidMount() {
-    this.props.getConvertCurency(this.state.convertCurency);
   }
   onMouseOverHandler = (e) => {
     if (e.target) {
@@ -43,9 +49,7 @@ export class NavigationBlock extends Component {
     }
   };
   onClickHandler = () => {
-    this.setState({
-      onClickCurrencyList: !this.state.onClickCurrencyList,
-    });
+    this.setState({ ...this.state, onClickCurrencyList: !this.state.onClickCurrencyList });
   };
   displayProductListHandler = () => {
     this.props.displayProductList();
@@ -56,32 +60,14 @@ export class NavigationBlock extends Component {
   getFilteredProducts = (e) => {
     this.props.getFilteredProducts(e.target.dataset.products);
   };
-  totalIncreasePriceHandler = (value) => {
-    this.setState((state) => ({
-      totalPrice: state.totalPrice.concat([value]),
-    }));
-  };
-  totalDecreasePriceHandler = (value) => {
-    console.log(value);
-    const newList = [...this.state.totalPrice];
-    const decreased = newList.indexOf(value);
-    newList.splice(decreased, 1);
-    this.setState({
-      totalPrice: newList,
-    });
-  };
   onConvertCurency = (e) => {
-    if (e.target.dataset.curency === 'USD') {
-      this.setState({ ...this.state, convertCurency: { symbol: '$', convertIndex: 1 } });
-    } else if (e.target.dataset.curency === 'EUR') {
-      this.setState({ ...this.state, convertCurency: { symbol: '€', convertIndex: 0.95 } });
-    } else if (e.target.dataset.curency === 'JPY') {
-      this.setState({ ...this.state, convertCurency: { symbol: '¥', convertIndex: 135.46 } });
-    }
-    this.props.getConvertCurency(this.state.convertCurency);
+    this.props.getConvertCurency(e.target.dataset.curency);
   };
   render() {
-    console.log(this.props.targetProduct);
+    const { convertIndex } = this.props.targetProduct.convertCurency;
+    const { symbol } = this.props.targetProduct.convertCurency;
+    const totalPrice = this.state.totalPrice.reduce((acc, cur) => acc + cur, 0).toFixed(2);
+    const currentCurency = convertIndex * totalPrice;
     return (
       <nav className="nav">
         <ul
@@ -136,10 +122,10 @@ export class NavigationBlock extends Component {
             style={{ display: this.props.targetProduct.displayProductList ? 'flex' : 'none' }}>
             <div>
               <p className="productCartListTitle">
-                <span>My Bag</span> {this.state.numberOfProduct} items
+                <span>My Bag</span> {this.state.amountOfProduct} items
               </p>
             </div>
-            {/* Main list of taking products */}
+            {/* Main cart of taking products */}
             <Query
               query={GET_FILTERED_BY_IDS}
               variables={{
@@ -152,11 +138,12 @@ export class NavigationBlock extends Component {
                   return (
                     <ProductCartDetalies
                       key={products.id}
+                      getCurrency={this.props.targetProduct}
                       state={this.state}
                       productItem={products}
                       deleteProductFromCart={this.props.deleteProductFromCart}
-                      totalIncreasePriceHandler={this.totalIncreasePriceHandler}
-                      totalDecreasePriceHandler={this.totalDecreasePriceHandler}
+                      totalIncreasePriceHandler={this.props.totalIncreasePriceHandler}
+                      totalDecreasePriceHandler={this.props.totalDecreasePriceHandler}
                     />
                   );
                 });
@@ -165,7 +152,10 @@ export class NavigationBlock extends Component {
             {/* Total price of taking product */}
             <div className="productCartTotalPrice">
               <p>Total</p>
-              <p>${this.state.totalPrice.reduce((acc, cur) => acc + cur, 0).toFixed(2)}</p>
+              <p>
+                {symbol}
+                {currentCurency.toFixed(2)}
+              </p>
             </div>
             {/* Button link to ./cart */}
             <div className="productCartSubmitButton">
@@ -177,42 +167,42 @@ export class NavigationBlock extends Component {
               <button className="pcCheckOutButton">check out</button>
             </div>
             {/* Block of 'out of stock' product */}
-            <Query
-              query={GET_FILTERED_BY_IDS}
-              variables={{
-                id: this.state.listOfTakingProduct,
-              }}
-              pollInterval={500}>
-              {({ data, error, loading }) => {
-                if (loading) return <p>'Loading...'</p>;
-                if (error) return <p>'Error! ${error.message}'</p>;
-                if (
-                  this.state.listOfTakingProduct !== 0 &&
-                  this.state.listOfTakingProduct.length < 3
-                ) {
-                  const outOfStock = data.getFilteredByIds[data.getFilteredByIds.length - 1];
-                  return (
-                    <div key={outOfStock?.id} className="productCartOutOfStock">
-                      <p className="productCartOutOfStockLabel">Size</p>
-                      <div className="productCartOutOfStockImage">
-                        <img src={outOfStock?.image} alt="Out of Stock" />
+            {this.state.listOfTakingProduct.length !== 0 && (
+              <Query
+                query={GET_FILTERED_BY_IDS}
+                variables={{
+                  id: this.state.listOfTakingProduct,
+                }}
+                pollInterval={500}>
+                {({ data, error, loading }) => {
+                  if (loading) return <p>'Loading...'</p>;
+                  if (error) return <p>'Error! ${error.message}'</p>;
+                  if (
+                    this.state.listOfTakingProduct !== 0 &&
+                    this.state.listOfTakingProduct.length < 3
+                  ) {
+                    const outOfStock = data.getFilteredByIds[data.getFilteredByIds.length - 1];
+                    return (
+                      <div key={outOfStock?.id} className="productCartOutOfStock">
+                        <p className="productCartOutOfStockLabel">Size</p>
+                        <div className="productCartOutOfStockImage">
+                          <img src={outOfStock?.image} alt="Out of Stock" />
+                        </div>
+                        <div className="productCartOutOfStockContent">
+                          <p className="productCartTitle">{outOfStock?.title}</p>
+                          <p className="productCartCurrencyItem">${outOfStock?.price}</p>
+                        </div>
                       </div>
-                      <div className="productCartOutOfStockContent">
-                        <p className="productCartTitle">{outOfStock?.title}</p>
-                        <p className="productCartCurrencyItem">${outOfStock?.price}</p>
-                      </div>
-                    </div>
-                  );
-                } else {
-                  return error;
-                }
-              }}
-            </Query>
+                    );
+                  }
+                }}
+              </Query>
+            )}
           </div>
           <span
             className="navChangeNumberOfProducts"
-            style={{ display: this.state.numberOfProduct !== 0 ? 'block' : 'none' }}>
-            {this.state.numberOfProduct}
+            style={{ display: this.state.amountOfProduct !== 0 ? 'block' : 'none' }}>
+            {this.state.amountOfProduct}
           </span>
         </div>
       </nav>

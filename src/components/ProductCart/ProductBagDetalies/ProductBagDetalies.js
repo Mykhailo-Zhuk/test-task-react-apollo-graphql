@@ -7,8 +7,8 @@ export default class ProductBagDetalies extends Component {
     super();
     this.state = {
       counter: 1,
-      totalPrice: 0,
-      totalTax: 0,
+      priceOfProduct: 0,
+      taxOfProduct: 0,
     };
   }
   productAmountIncrease = () => {
@@ -17,9 +17,8 @@ export default class ProductBagDetalies extends Component {
         counter: state.counter + 1,
       };
     });
-    this.props.allCountHandler(1);
-    this.props.totalIncreasePriceHandler(this.state.totalPrice);
-    this.props.totalIncreaseTaxHandler(this.state.totalTax);
+    this.props.totalIncreasePriceHandler(this.state.priceOfProduct, this.state.taxOfProduct);
+    // this.props.totalIncreaseTaxHandler(this.state.taxOfProduct);
   };
   productAmountDecrease = () => {
     if (this.state.counter !== 1) {
@@ -28,34 +27,38 @@ export default class ProductBagDetalies extends Component {
           counter: state.counter - 1,
         };
       });
-      this.props.allCountHandler(-1);
-      this.props.totalDecreasePriceHandler(this.state.totalPrice);
-      this.props.totalDecreaseTaxHandler(this.state.totalTax);
+      this.props.totalDecreasePriceHandler(this.state.priceOfProduct, this.state.taxOfProduct);
+      // this.props.totalDecreaseTaxHandler(this.state.taxOfProduct);
     }
   };
   componentDidMount() {
     this.setState((state, props) => {
       const price = props.productItem.price;
       return {
-        totalPrice: Number(price.toFixed(2)),
-        totalTax: Number((price * 0.21).toFixed(2)),
+        priceOfProduct: Number(price.toFixed(2)),
+        taxOfProduct: Number((price * 0.21).toFixed(2)),
       };
     });
-    // this.props.totalDecreasePriceHandler(this.state.totalPrice);
-    // this.props.totalDecreaseTaxHandler(this.state.totalTax);
   }
   componentDidUpdate(prevProps, prevState) {
     if (this.props.productState.counter !== prevProps.productState.counter) {
-      this.props.totalIncreasePriceHandler(this.state.totalPrice);
-      this.props.totalIncreaseTaxHandler(this.state.totalTax);
+      this.props.totalIncreasePriceHandler(this.state.priceOfProduct);
+      // this.props.totalIncreaseTaxHandler(this.state.taxOfProduct);
     }
   }
   getIdOfDeletedProduct = () => {
-    this.props.deleteProductFromCart(this.props.productItem.id);
+    this.props.deleteProductFromCart(
+      +this.props.productItem.id,
+      this.state.priceOfProduct,
+      this.state.taxOfProduct,
+    );
   };
 
   render() {
-    console.log(this.state, this.props);
+    const { convertIndex } = this.props.targetProduct.convertCurency;
+    const { symbol } = this.props.targetProduct.convertCurency;
+    const productPrice = this.props.productItem.price;
+    const currentCurency = convertIndex * productPrice;
     return (
       <div className="productBagBlock">
         {/* Left side with title, price, color, size and middle side with increase and decrease buttons*/}
@@ -63,7 +66,10 @@ export default class ProductBagDetalies extends Component {
           <div className="productBagDescription">
             <p className="productBagTitle">{this.props.productItem.title}</p>
             <div className="productBagConfigCurrencyBlock">
-              <div className="productBagCurrencyItem">${this.props.productItem.price}</div>
+              <div className="productBagCurrencyItem">
+                {symbol}
+                {currentCurency.toFixed(2)}
+              </div>
             </div>
             <div className="productBagConfigSizeRow">
               <p className="productBagRowTitle">Size:</p>

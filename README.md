@@ -10,5 +10,4 @@ See some more specific information on the main requirements below. Remember - if
 - Ability to change the currency of the store to one of the available currencies. + -->
 
 <!-- Problems:
-1. When ProductBag component rendered value from state not rendered and is equal to 0;
-2. Total price in Navigation-->
+1. When ProductBag component rendered value from state not rendered and is equal to 0-->
