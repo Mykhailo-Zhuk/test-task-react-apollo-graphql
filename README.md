@@ -8,3 +8,10 @@ See some more specific information on the main requirements below. Remember - if
 - Filtering products by category name for all of the categories from BE
 - The descriptions provided in HTML format should be parsed and presented as HTML, not as plain text
 - Ability to change the currency of the store to one of the available currencies. + -->
+
+<!-- First commands:
+    -> cd server
+    -> npm run dev
+    -> cd ..
+    -> npm start
+ -->
