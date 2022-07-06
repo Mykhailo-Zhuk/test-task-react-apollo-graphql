@@ -22,14 +22,8 @@ export const GET_PRODUCT_DESCRIPTION = gql`
       description
       category
       image
-      sizes {
-        id
-        size
-      }
-      colors {
-        id
-        color
-      }
+      sizes
+      colors
     }
   }
 `;
@@ -40,14 +34,8 @@ export const GET_FILTERED_BY_IDS = gql`
       title
       price
       image
-      sizes {
-        id
-        size
-      }
-      colors {
-        id
-        color
-      }
+      sizes
+      colors
     }
   }
 `;

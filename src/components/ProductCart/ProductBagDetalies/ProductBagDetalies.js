@@ -1,64 +1,14 @@
 import React, { Component } from 'react';
+import { store } from '../../../store/store';
 import '../ProductBag.css';
-import vector from './icon/Vector.svg';
 
 export default class ProductBagDetalies extends Component {
-  constructor() {
-    super();
-    this.state = {
-      counter: 1,
-      priceOfProduct: 0,
-      taxOfProduct: 0,
-    };
-  }
-  productAmountIncrease = () => {
-    this.setState((state) => {
-      return {
-        counter: state.counter + 1,
-      };
-    });
-    this.props.totalIncreasePriceHandler(this.state.priceOfProduct, this.state.taxOfProduct);
-    // this.props.totalIncreaseTaxHandler(this.state.taxOfProduct);
-  };
-  productAmountDecrease = () => {
-    if (this.state.counter !== 1) {
-      this.setState((state) => {
-        return {
-          counter: state.counter - 1,
-        };
-      });
-      this.props.totalDecreasePriceHandler(this.state.priceOfProduct, this.state.taxOfProduct);
-      // this.props.totalDecreaseTaxHandler(this.state.taxOfProduct);
-    }
-  };
-  componentDidMount() {
-    this.setState((state, props) => {
-      const price = props.productItem.price;
-      return {
-        priceOfProduct: Number(price.toFixed(2)),
-        taxOfProduct: Number((price * 0.21).toFixed(2)),
-      };
-    });
-  }
-  componentDidUpdate(prevProps, prevState) {
-    if (this.props.productState.counter !== prevProps.productState.counter) {
-      this.props.totalIncreasePriceHandler(this.state.priceOfProduct);
-      // this.props.totalIncreaseTaxHandler(this.state.taxOfProduct);
-    }
-  }
-  getIdOfDeletedProduct = () => {
-    this.props.deleteProductFromCart(
-      +this.props.productItem.id,
-      this.state.priceOfProduct,
-      this.state.taxOfProduct,
-    );
-  };
-
   render() {
-    const { convertIndex } = this.props.targetProduct.convertCurency;
-    const { symbol } = this.props.targetProduct.convertCurency;
-    const productPrice = this.props.productItem.price;
-    const currentCurency = convertIndex * productPrice;
+    const product = store
+      .getState()
+      .targetProducts.find((prod) => prod.id === +this.props.productItem.id);
+    const { convertIndex, symbol } = store.getState().convertCurency;
+    const currentCurrency = (convertIndex * this.props.productItem.price).toFixed(2);
     return (
       <div className="productBagBlock">
         {/* Left side with title, price, color, size and middle side with increase and decrease buttons*/}
@@ -68,16 +18,16 @@ export default class ProductBagDetalies extends Component {
             <div className="productBagConfigCurrencyBlock">
               <div className="productBagCurrencyItem">
                 {symbol}
-                {currentCurency.toFixed(2)}
+                {currentCurrency}
               </div>
             </div>
             <div className="productBagConfigSizeRow">
               <p className="productBagRowTitle">Size:</p>
               <ul className="productBagSizeRowList">
-                {this.props.productItem.sizes.map((element) => {
+                {this.props.productItem.sizes.map((element, index) => {
                   return (
-                    <li key={element.id} className="productBagSizeRowItem">
-                      <button>{element.size}</button>
+                    <li key={index} className="productBagSizeRowItem">
+                      <button>{element}</button>
                     </li>
                   );
                 })}
@@ -86,40 +36,50 @@ export default class ProductBagDetalies extends Component {
             <div className="productBagConfigColorRow">
               <p className="productBagRowTitle">Color:</p>
               <ul className="productBagColorRowList">
-                {this.props.productItem.colors.map((element) => {
+                {this.props.productItem.colors.map((element, index) => {
                   return (
-                    <li key={element.id} className="productBagColorItem">
-                      <button style={{ backgroundColor: `${element.color}` }}></button>
+                    <li key={index} className="productBagColorItem">
+                      <button style={{ backgroundColor: `${element}` }}></button>
                     </li>
                   );
                 })}
               </ul>
             </div>
           </div>
+          {/* Right side with increase/decrease amount button, image*/}
           <div className="productBagAmountButtons">
-            <button className="productBagAmountIncrease" onClick={this.productAmountIncrease}>
+            <button
+              className="productBagAmountIncrease"
+              onClick={() =>
+                store.dispatch({ type: 'INCREASE_AMOUNT', id: +this.props.productItem.id })
+              }>
               +
             </button>
-            <p className="productBagAmount">{this.state.counter}</p>
-            <button className="productBagAmountDecrease" onClick={this.productAmountDecrease}>
+            <p className="productBagAmount">{product.count}</p>
+            <button
+              className="productBagAmountDecrease"
+              onClick={() =>
+                store.dispatch({ type: 'DECREASE_AMOUNT', id: +this.props.productItem.id })
+              }>
               -
             </button>
           </div>
         </div>
-        {/* Right with image and carets*/}
+        {/* Image and carets*/}
         <div className="productBagImage">
-          <img src={this.props.productItem.image} alt="target's product"></img>
+          <img src={this.props.productItem.image} alt="target product"></img>
           <div className="productBagImageCaret">
-            <div className="productBagImageCaretLeft">
-              <img src={vector} alt="vector"></img>
-            </div>
-            <div className="productBagImageCaretRight">
-              <img src={vector} alt="vector"></img>
-            </div>
+            <div className="productBagImageCaretLeft"></div>
+            <div className="productBagImageCaretRight"></div>
           </div>
         </div>
         <div className="productDeleteButton">
-          <button onClick={this.getIdOfDeletedProduct}>+</button>
+          <button
+            onClick={() =>
+              store.dispatch({ type: 'DELETE_PRODUCT', id: +this.props.productItem.id })
+            }>
+            +
+          </button>
         </div>
       </div>
     );

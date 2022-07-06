@@ -33,14 +33,22 @@
   margin: 15px 10px 5px 10px;
 }
 .cartIcon {
+  background: url(./icon/Circle\ Icon.svg);
+  background-repeat: no-repeat;
   position: absolute;
-  right: 28px;
-  bottom: 75px;
+  width: 72px;
+  height: 65px;
+  right: 45px;
+  bottom: 84px;
   z-index: 10;
 }
 
 .badgeIcon {
+  background: url(./icon/Badge.svg);
+  background-repeat: no-repeat;
   position: absolute;
+  width: 61px;
+  height: 35px;
   left: 10px;
   top: 10px;
 }

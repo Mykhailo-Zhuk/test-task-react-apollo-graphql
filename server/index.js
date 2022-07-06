@@ -15,17 +15,6 @@ const root = {
   getProductDescription: ({ id }) => {
     return storeData.find((product) => product.id == id);
   },
-  deleteProduct: ({ id }) => {
-    storeData = storeData.filter((product) => product.id !== id);
-    return true;
-  },
-  createProduct: ({ input }) => {
-    const product = {
-      ...input,
-    };
-    storeData.push(product);
-    return product;
-  },
   getFilteredByCategory: ({ category }) => {
     return storeData.filter((product) => product.category == category);
   },

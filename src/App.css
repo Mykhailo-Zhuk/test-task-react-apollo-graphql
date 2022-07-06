@@ -7,6 +7,7 @@
   font-family: 'Raleway';
 }
 .overlay {
+  display: none;
   content: '';
   position: absolute;
   top: 86px;
@@ -16,4 +17,7 @@
   background: rgba(57, 55, 72, 0.22);
   backdrop-filter: blur(3px);
   z-index: 3;
+}
+.active {
+  display: block;
 }

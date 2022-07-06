@@ -1,41 +1,14 @@
 import React, { Component } from 'react';
+import { store } from '../../../store/store';
 import '../Navigation.css';
 
 export default class ProductCartDetalies extends Component {
-  constructor() {
-    super();
-    this.state = {
-      counter: 1,
-      priceOfProduct: 0,
-    };
-  }
-  productAmountIncrease = () => {
-    this.setState((state) => {
-      return { counter: state.counter + 1 };
-    });
-    this.props.totalIncreasePriceHandler(this.state.priceOfProduct);
-  };
-  productAmountDecrease = () => {
-    if (this.state.counter > 1) {
-      this.setState((state) => {
-        return { counter: state.counter - 1 };
-      });
-      this.props.totalDecreasePriceHandler(this.state.priceOfProduct);
-    }
-  };
-
-  componentDidMount() {
-    this.setState({ ...this.state, priceOfProduct: Number(this.props.productItem.price) });
-    this.props.totalDecreasePriceHandler(this.state.priceOfProduct);
-  }
-  getIdOfDeletedProduct = () => {
-    this.props.deleteProductFromCart(+this.props.productItem.id, this.state.priceOfProduct);
-  };
   render() {
-    const { convertIndex } = this.props.getCurrency.convertCurency;
-    const { symbol } = this.props.getCurrency.convertCurency;
-    const totalPrice = this.props.productItem.price;
-    const currentCurency = convertIndex * totalPrice;
+    const product = store
+      .getState()
+      .targetProducts.find((prod) => prod.id === +this.props.productItem.id);
+    const { convertIndex, symbol } = store.getState().convertCurency;
+    const currentCurrency = (convertIndex * this.props.productItem.price).toFixed(2);
     return (
       <div className="productCartBlock">
         <div className="productCartConfig">
@@ -44,7 +17,7 @@ export default class ProductCartDetalies extends Component {
             <div className="productCartConfigCurrencyBlock">
               <div className="productCartCurrencyItem">
                 {symbol}
-                {currentCurency.toFixed(2)}
+                {currentCurrency}
               </div>
             </div>
             <div className="productCartConfigSizeRow">
@@ -52,8 +25,8 @@ export default class ProductCartDetalies extends Component {
               <ul className="productCartSizeRowList">
                 {this.props.productItem.sizes.map((element) => {
                   return (
-                    <li key={element.id} className="productCartSizeRowItem">
-                      <button>{element.size}</button>
+                    <li className="productCartSizeRowItem">
+                      <button>{element}</button>
                     </li>
                   );
                 })}
@@ -64,8 +37,8 @@ export default class ProductCartDetalies extends Component {
               <ul className="productCartColorRowList">
                 {this.props.productItem.colors.map((element) => {
                   return (
-                    <li key={element.id} className="productCartColorItem">
-                      <button style={{ backgroundColor: `${element.color}` }}></button>
+                    <li className="productCartColorItem">
+                      <button style={{ backgroundColor: `${element}` }}></button>
                     </li>
                   );
                 })}
@@ -73,11 +46,19 @@ export default class ProductCartDetalies extends Component {
             </div>
           </div>
           <div className="productCartAmountButtons">
-            <button className="productCartAmountIncrease" onClick={this.productAmountIncrease}>
+            <button
+              className="productCartAmountIncrease"
+              onClick={() =>
+                store.dispatch({ type: 'INCREASE_AMOUNT', id: +this.props.productItem.id })
+              }>
               +
             </button>
-            <p className="productCartAmount">{this.state.counter}</p>
-            <button className="productCartAmountDecrease" onClick={this.productAmountDecrease}>
+            <p className="productCartAmount">{product.count}</p>
+            <button
+              className="productCartAmountDecrease"
+              onClick={() =>
+                store.dispatch({ type: 'DECREASE_AMOUNT', id: +this.props.productItem.id })
+              }>
               -
             </button>
           </div>
@@ -86,7 +67,12 @@ export default class ProductCartDetalies extends Component {
           <img src={this.props.productItem.image} alt="target's product"></img>
         </div>
         <div className="productDeleteButton">
-          <button onClick={this.getIdOfDeletedProduct}>+</button>
+          <button
+            onClick={() =>
+              store.dispatch({ type: 'DELETE_PRODUCT', id: +this.props.productItem.id })
+            }>
+            +
+          </button>
         </div>
       </div>
     );

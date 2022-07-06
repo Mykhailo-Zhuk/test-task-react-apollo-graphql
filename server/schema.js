@@ -8,26 +8,8 @@ type Products {
     description: String
     category: String
     image: String
-    sizes: [Sizes]
-    colors: [Colors]
-}
-type Sizes {
-    id: ID
-    size: String
-}
-
-type Colors {
-    id: ID
-    color: String
-}
-
-input UserInput {
-    id: ID!
-    title: String
-    price: Float
-    description: String
-    category: String
-    image: String
+    sizes: [String]
+    colors: [String]
 }
 
 type Query {
@@ -35,11 +17,6 @@ type Query {
     getProductDescription(id: ID): Products
     getFilteredByCategory(category: String!): [Products]
     getFilteredByIds(ids: [Int!]): [Products]
-}
-
-type Mutation {
-    createProduct(input: UserInput): Products
-    deleteProduct(id: ID!): Boolean!
 }
 `);
 

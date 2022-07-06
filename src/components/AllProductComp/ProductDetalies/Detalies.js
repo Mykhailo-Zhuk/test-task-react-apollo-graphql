@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
+import { store } from '../../../store/store';
 import './Detalies.css';
-import badgeIcon from './icon/Badge.svg';
-import cartIcon from './icon/Circle Icon.svg';
 
 export class Detalies extends Component {
   constructor() {
@@ -9,8 +8,6 @@ export class Detalies extends Component {
     this.state = {
       // Display or disappear cartIcon and badgeIcon
       isHovered: false,
-      // Display the amount of taken product
-      idOfTargetProduct: 0,
     };
   }
   // CartIcon and badgeIcon will display when mouse hovered product item
@@ -27,9 +24,8 @@ export class Detalies extends Component {
   };
 
   render() {
-    const { convertIndex } = this.props.data.state.convertCurency;
-    const { symbol } = this.props.data.state.convertCurency;
-    const currentCurency = convertIndex * this.props.product.price;
+    const { convertIndex, symbol } = store.getState().convertCurency;
+    const currentCurrency = (convertIndex * this.props.product.price).toFixed(2);
     return (
       <div className="productWrapper">
         <div
@@ -37,19 +33,13 @@ export class Detalies extends Component {
           onMouseOver={this.onMouseHoverHandler}
           onMouseOut={this.onMouseOutHandler}>
           {/* Badge icon */}
-          <img
-            src={badgeIcon}
-            alt="badge"
+          <div
             style={{ display: this.state.isHovered ? 'block' : 'none' }}
-            className="badgeIcon"
-          />
+            className="badgeIcon"></div>
           {/* Cart icon */}
-          <img
-            src={cartIcon}
-            alt="cartIcon"
+          <div
             style={{ display: this.state.isHovered ? 'block' : 'none' }}
-            className="cartIcon"
-          />
+            className="cartIcon"></div>
           <div className="productImage">
             <img src={this.props.product.image} alt="product" />
           </div>
@@ -57,7 +47,7 @@ export class Detalies extends Component {
             <div className="productDetaliesTitle">{this.props.product.title}</div>
             <div className="productDetaliesPrice">
               {symbol}
-              {currentCurency.toFixed(2)}
+              {currentCurrency}
             </div>
           </div>
         </div>

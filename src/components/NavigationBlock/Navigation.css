@@ -35,17 +35,24 @@ p {
   color: var(--nav-font-color);
   padding-bottom: 8px;
   border-bottom: 3px solid var(--nav-font-color);
+  cursor: pointer;
+}
+.store-logo {
+  background-image: url('./icon/a-logo.svg');
+  width: 41px;
+  height: 38px;
 }
 .navCartBlock {
   position: relative;
+  display: flex;
 }
 /* Show list of currency characters */
-.navCurrencyCharacter {
+.navCurrencyCharacters {
   font-style: normal;
   font-weight: 500;
   font-size: 18px;
   line-height: 160%;
-  display: block;
+  display: none;
   text-align: center;
   position: absolute;
   width: 90px;
@@ -57,12 +64,35 @@ p {
   -webkit-filter: drop-shadow(0px 4px 35px rgba(168, 172, 176, 0.19));
   z-index: 10;
 }
-.navCurrencyCharacter ul li:hover {
+.navCurrencyCharacters ul li:hover {
   background-color: var(--currency-list);
 }
-.navCurrencyCharacter ul li {
+.navCurrencyCharacters ul li {
   padding: 5px 5px;
 }
+.currencyListOpen {
+  display: block;
+}
+/* Currency list classes */
+.dolarSignUp {
+  background: url('./icon/dolar-character-up.svg');
+  background-repeat: no-repeat;
+  cursor: pointer;
+  width: 45px;
+  height: 30px;
+}
+.signDown {
+  background: url('./icon/dolar-character-down.svg');
+}
+/* Empty cart */
+.emptyCart {
+  background: url('./icon/Empty-Cart.svg');
+  background-position-y: 5px;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+}
+/* Show number of products */
 .navChangeNumberOfProducts {
   font-family: 'Roboto';
   font-style: normal;
@@ -85,6 +115,7 @@ p {
 }
 /* Show product cart */
 .navShowProductsCart {
+  display: none;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
@@ -103,6 +134,9 @@ p {
   filter: drop-shadow(0px 4px 35px rgba(168, 172, 176, 0.19));
   z-index: 4;
   box-sizing: border-box;
+}
+.openProductCart {
+  display: flex;
 }
 .productCartListTitle {
   font-style: normal;
@@ -216,16 +250,8 @@ p {
   font-weight: 400;
   font-size: 14px;
   line-height: 160%;
-  display: flex;
-  align-items: center;
-  text-align: center;
   color: var(--nav-icon-color);
   text-transform: uppercase;
-  border-radius: 5px;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
-  -o-border-radius: 5px;
 }
 .productCartSizeRowItem button:hover,
 .productCartSizeRowItem button:focus {

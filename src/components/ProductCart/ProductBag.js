@@ -1,6 +1,7 @@
 import { Query } from '@apollo/client/react/components';
 import React, { Component } from 'react';
 import { GET_FILTERED_BY_IDS } from '../../query/getProduct';
+import { store } from '../../store/store';
 import './ProductBag.css';
 import ProductBagDetalies from './ProductBagDetalies/ProductBagDetalies';
 
@@ -8,63 +9,32 @@ export class ProductBag extends Component {
   constructor() {
     super();
     this.state = {
-      amountOfProduct: 0,
-      listOfTakingProduct: [],
-      totalPrice: [],
-      totalTax: [],
+      data: [],
     };
+    store.subscribe(this.updateStore);
   }
-  static getDerivedStateFromProps(props, state) {
-    if (
-      props.targetProduct.idOfTargetProducts.size !== state.listOfTakingProduct.length ||
-      props.targetProduct.totalPrice.length !== state.totalPrice.length
-    ) {
-      return {
-        numberOfProduct: [...props.targetProduct.idOfTargetProducts].length,
-        listOfTakingProduct: [...props.targetProduct.idOfTargetProducts],
-        totalPrice: props.targetProduct.totalPrice,
-        amountOfProduct: props.targetProduct.numberOfProduct,
-      };
-    } else if (props.targetProduct.idOfTargetProducts.length === 0) {
-      return {
-        amountOfProduct: 0,
-        totalPrice: [],
-      };
-    }
-    return null;
-  }
-  // componentDidUpdate(prevState) {
-  //   if (prevState.totalPrice === this.state.totalPrice) {
-  //     const tax = [...this.state.totalPrice];
-  //     const changedTax = tax.map((el) => el * 0.21);
-  //     this.setState({
-  //       ...this.state,
-  //       totalTax: changedTax,
-  //     });
-  //   }
-  // }
-
-  componentWillUnmount() {
-    this.setState((state) => {
-      const amountOfTakingProduct = this.props.targetProduct.idOfTargetProducts.length;
-      return {
-        allCount: amountOfTakingProduct > 1 ? amountOfTakingProduct : 1,
-        totalPrice: [],
-        totalTax: [],
-      };
+  updateStore = () => {
+    const products = store.getState().targetProducts;
+    this.setState({
+      data: products,
     });
-  }
+  };
   render() {
-    const { convertIndex } = this.props.targetProduct.convertCurency;
-    const { symbol } = this.props.targetProduct.convertCurency;
-    const totalPrice = this.props.targetProduct.totalPrice
-      .reduce((acc, cur) => acc + cur, 0)
-      .toFixed(2);
-    const currentCurency = convertIndex * totalPrice;
-    const totalCartTax = this.props.targetProduct.totalTax
-      .reduce((acc, cur) => acc + cur, 0)
-      .toFixed(2);
-    const currentCartTax = totalCartTax * convertIndex;
+    const { targetProducts } = store.getState();
+    const { convertIndex, symbol } = store.getState().convertCurency;
+    const mapTotalBagPrice = targetProducts
+      .map((el) => el.price * el.count)
+      .reduce((acc, cur) => acc + cur, 0);
+    const currentBagCurrency = (convertIndex * mapTotalBagPrice).toFixed(2);
+
+    const mapTotalBagTax = targetProducts
+      .map((el) => el.tax * el.count)
+      .reduce((acc, cur) => acc + cur, 0);
+    const currentBagTax = (mapTotalBagTax * convertIndex).toFixed(2);
+
+    const allCounts = targetProducts
+      .map((product) => product.count)
+      .reduce((acc, cur) => acc + cur, 0);
     return (
       <div className="productBag">
         <h2 className="productBagMainTitle">Cart</h2>
@@ -72,25 +42,13 @@ export class ProductBag extends Component {
         <Query
           query={GET_FILTERED_BY_IDS}
           variables={{
-            id: [...this.props.targetProduct.idOfTargetProducts],
-          }}
-          pollInterval={500}>
+            id: store.getState().targetProducts.map((product) => product.id),
+          }}>
           {({ data, error, loading }) => {
             if (loading) return <p>'Loading...'</p>;
             if (error) return <p>'Error! ${error.message}'</p>;
             return data.getFilteredByIds.map((products) => {
-              return (
-                <ProductBagDetalies
-                  key={products.id}
-                  productItem={products}
-                  productState={this.state}
-                  targetProduct={this.props.targetProduct}
-                  allCountHandler={this.allCountHandler}
-                  totalIncreasePriceHandler={this.props.totalIncreasePriceHandler}
-                  totalDecreasePriceHandler={this.props.totalDecreasePriceHandler}
-                  deleteProductFromCart={this.props.deleteProductFromCart}
-                />
-              );
+              return <ProductBagDetalies key={products.id} productItem={products} />;
             });
           }}
         </Query>
@@ -101,17 +59,17 @@ export class ProductBag extends Component {
               Tax 21%:
               <span>
                 {symbol}
-                {currentCartTax.toFixed(2)}
+                {currentBagTax}
               </span>
             </div>
             <div className="productBagQuantityRow">
-              Quantity:<span>{this.state.amountOfProduct}</span>
+              Quantity:<span>{allCounts}</span>
             </div>
             <div className="productBagTotalPriceRow">
               Total:
               <span>
                 {symbol}
-                {currentCurency.toFixed(2)}
+                {currentBagCurrency}
               </span>
             </div>
           </div>

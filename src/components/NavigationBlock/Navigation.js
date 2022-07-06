@@ -1,43 +1,27 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+
 import './Navigation.css';
-import image from './icon/a-logo.svg';
-import dolarDown from './icon/dolar-character-down.svg';
-import dolarUp from './icon/dolar-character-up.svg';
-import EmptyCart from './icon/Empty-Cart.svg';
 import { Query } from '@apollo/client/react/components';
 import { GET_FILTERED_BY_IDS } from '../../query/getProduct';
-import { Link } from 'react-router-dom';
 import ProductCartDetalies from './ProductCartDetalies/ProductCartDetalies';
+import { store } from '../../store/store';
 
 export class NavigationBlock extends Component {
   constructor() {
     super();
     this.state = {
-      listOfTakingProduct: [],
-      onClickCurrencyList: false,
       amountOfProduct: 0,
-      totalPrice: [],
-      convertCurency: {},
     };
+    store.subscribe(this.updateAmountOfProduct);
   }
-  static getDerivedStateFromProps(props, state) {
-    if (
-      props.targetProduct.idOfTargetProducts.size !== state.listOfTakingProduct.length ||
-      props.targetProduct.totalPrice.length !== state.totalPrice.length
-    ) {
-      return {
-        amountOfProduct: props.targetProduct.numberOfProduct,
-        listOfTakingProduct: [...props.targetProduct.idOfTargetProducts],
-        totalPrice: props.targetProduct.totalPrice,
-      };
-    } else if (props.targetProduct.idOfTargetProducts.length === 0) {
-      return {
-        amountOfProduct: 0,
-        totalPrice: [],
-      };
-    }
-    return null;
-  }
+  updateAmountOfProduct = () => {
+    const amount = store.getState().targetProducts.length;
+    this.setState({
+      amountOfProduct: amount,
+    });
+  };
+  // When your mouse over in the navigation category to target element will add 'nav_active' class, else - remove this class
   onMouseOverHandler = (e) => {
     if (e.target) {
       const link = e.target;
@@ -48,31 +32,24 @@ export class NavigationBlock extends Component {
       });
     }
   };
-  onClickHandler = () => {
-    this.setState({ ...this.state, onClickCurrencyList: !this.state.onClickCurrencyList });
-  };
-  displayProductListHandler = () => {
-    this.props.displayProductList();
-  };
-  linkCartHandler = () => {
-    this.props.linkHandler();
-  };
-  getFilteredProducts = (e) => {
-    this.props.getFilteredProducts(e.target.dataset.products);
-  };
-  onConvertCurency = (e) => {
-    this.props.getConvertCurency(e.target.dataset.curency);
-  };
   render() {
-    const { convertIndex } = this.props.targetProduct.convertCurency;
-    const { symbol } = this.props.targetProduct.convertCurency;
-    const totalPrice = this.state.totalPrice.reduce((acc, cur) => acc + cur, 0).toFixed(2);
-    const currentCurency = convertIndex * totalPrice;
+    const { targetProducts } = store.getState();
+    const { convertIndex, symbol } = store.getState().convertCurency;
+    const totalPrice = targetProducts
+      .map((el) => el.price * el.count)
+      .reduce((acc, cur) => acc + cur, 0);
+    const currentCurrency = (convertIndex * totalPrice).toFixed(2);
     return (
       <nav className="nav">
+        {/* Link to category */}
         <ul
           className="navCategory"
-          onClick={this.getFilteredProducts}
+          onClick={(e) =>
+            store.dispatch({
+              type: 'FILTERED_PRODUCTS',
+              categoryOfProducts: e.target.dataset.products,
+            })
+          }
           onMouseOver={this.onMouseOverHandler}>
           <li className="navCategoryItem" data-products="all products">
             all products
@@ -90,36 +67,33 @@ export class NavigationBlock extends Component {
             women's clothing
           </li>
         </ul>
-        <img src={image} height={32} width={32} alt="store-logo" />
+        <div className="store-logo"></div>
+        {/* Change currency block*/}
         <div className="navCartBlock">
-          {/* Change currency */}
+          {/* Show or disappear currency list */}
           <div
-            className="navCurrencyCharacter"
-            style={{
-              display: this.state.onClickCurrencyList ? 'block' : 'none',
-            }}>
-            <ul onClick={this.onConvertCurency}>
+            className="dolarSignUp"
+            onClick={() => store.dispatch({ type: 'TOGGLE_CURRENCY_LIST' })}></div>
+          {/* Currency list, open/close currency list */}
+          <div className="navCurrencyCharacters">
+            <ul
+              onClick={(e) =>
+                store.dispatch({
+                  type: 'GET_CONVERT_CURENCY',
+                  convertCurency: e.target.dataset.curency,
+                })
+              }>
               <li data-curency="USD">$ USD</li>
               <li data-curency="EUR">€ EUR</li>
               <li data-curency="JPY">¥ JPY</li>
             </ul>
           </div>
-          <img
-            src={this.state.onClickCurrencyList ? dolarDown : dolarUp}
-            alt="dolar-down-icon"
-            onClick={this.onClickHandler}
-            style={{ cursor: 'pointer' }}
-          />
-          <img
-            src={EmptyCart}
-            alt="empty-cart-icon"
-            style={{ cursor: 'pointer' }}
-            onClick={this.displayProductListHandler}
-          />
-          {/* Show products cart */}
+          {/* Empty cart sign, open/close products cart */}
           <div
-            className="navShowProductsCart"
-            style={{ display: this.props.targetProduct.displayProductList ? 'flex' : 'none' }}>
+            className="emptyCart"
+            onClick={() => store.dispatch({ type: 'TOGGLE_PRODUCTS_CART' })}></div>
+          {/* Show products cart */}
+          <div className="navShowProductsCart">
             <div>
               <p className="productCartListTitle">
                 <span>My Bag</span> {this.state.amountOfProduct} items
@@ -129,23 +103,13 @@ export class NavigationBlock extends Component {
             <Query
               query={GET_FILTERED_BY_IDS}
               variables={{
-                id: this.state.listOfTakingProduct,
+                id: store.getState().targetProducts.map((product) => product.id),
               }}>
               {({ data, error, loading }) => {
                 if (loading) return <p>'Loading...'</p>;
                 if (error) return <p>'Error! ${error.message}'</p>;
                 return data.getFilteredByIds.map((products) => {
-                  return (
-                    <ProductCartDetalies
-                      key={products.id}
-                      getCurrency={this.props.targetProduct}
-                      state={this.state}
-                      productItem={products}
-                      deleteProductFromCart={this.props.deleteProductFromCart}
-                      totalIncreasePriceHandler={this.props.totalIncreasePriceHandler}
-                      totalDecreasePriceHandler={this.props.totalDecreasePriceHandler}
-                    />
-                  );
+                  return <ProductCartDetalies key={products.id} productItem={products} />;
                 });
               }}
             </Query>
@@ -154,43 +118,44 @@ export class NavigationBlock extends Component {
               <p>Total</p>
               <p>
                 {symbol}
-                {currentCurency.toFixed(2)}
+                {currentCurrency}
               </p>
             </div>
             {/* Button link to ./cart */}
             <div className="productCartSubmitButton">
               <Link to={'/cart'}>
-                <button className="pcViewBagButton" onClick={this.linkCartHandler}>
+                <button
+                  className="pcViewBagButton"
+                  onClick={() => store.dispatch({ type: 'LINK_TO_CART' })}>
                   view bag
                 </button>
               </Link>
               <button className="pcCheckOutButton">check out</button>
             </div>
             {/* Block of 'out of stock' product */}
-            {this.state.listOfTakingProduct.length !== 0 && (
+            {this.state.amountOfProduct > 0 && (
               <Query
                 query={GET_FILTERED_BY_IDS}
                 variables={{
-                  id: this.state.listOfTakingProduct,
-                }}
-                pollInterval={500}>
+                  id: store.getState().targetProducts.map((product) => product.id),
+                }}>
                 {({ data, error, loading }) => {
                   if (loading) return <p>'Loading...'</p>;
                   if (error) return <p>'Error! ${error.message}'</p>;
-                  if (
-                    this.state.listOfTakingProduct !== 0 &&
-                    this.state.listOfTakingProduct.length < 3
-                  ) {
+                  if (this.state.amountOfProduct > 0 && this.state.amountOfProduct < 3) {
                     const outOfStock = data.getFilteredByIds[data.getFilteredByIds.length - 1];
                     return (
-                      <div key={outOfStock?.id} className="productCartOutOfStock">
+                      <div key={outOfStock.id} className="productCartOutOfStock">
                         <p className="productCartOutOfStockLabel">Size</p>
                         <div className="productCartOutOfStockImage">
-                          <img src={outOfStock?.image} alt="Out of Stock" />
+                          <img src={outOfStock.image} alt="Out of Stock" />
                         </div>
                         <div className="productCartOutOfStockContent">
-                          <p className="productCartTitle">{outOfStock?.title}</p>
-                          <p className="productCartCurrencyItem">${outOfStock?.price}</p>
+                          <p className="productCartTitle">{outOfStock.title}</p>
+                          <p className="productCartCurrencyItem">
+                            {symbol}
+                            {convertIndex * outOfStock.price}
+                          </p>
                         </div>
                       </div>
                     );

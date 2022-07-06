@@ -1,6 +1,7 @@
 import { Query } from '@apollo/client/react/components';
 import React, { Component } from 'react';
 import { GET_PRODUCT_DESCRIPTION } from '../../query/getProduct';
+import { store } from '../../store/store';
 import styles from './ProductDescription.module.css';
 
 export class ProductDescription extends Component {
@@ -9,18 +10,15 @@ export class ProductDescription extends Component {
     this.state = {
       params: window.location.pathname.substring(1),
       priceOfProduct: 0,
+      taxOfProduct: 0,
     };
   }
 
   // When click to getIdOfTargetProductHandler 'this.props.product.id' will put to the App state.
-  getTargetProductHandler = () => {
-    this.props.getProductAfterClick(+this.state.params, this.state.priceOfProduct);
-  };
   render() {
-    const { convertIndex } = this.props.targetProduct.convertCurency;
-    const { symbol } = this.props.targetProduct.convertCurency;
+    const { convertIndex, symbol } = store.getState().convertCurency;
     const totalPrice = this.state.priceOfProduct;
-    const currentCurency = convertIndex * totalPrice;
+    const currentCurrency = (convertIndex * totalPrice).toFixed(2);
     const RenderedProduct = (
       <Query
         query={GET_PRODUCT_DESCRIPTION}
@@ -28,7 +26,11 @@ export class ProductDescription extends Component {
           id: this.state.params,
         }}
         onCompleted={(data) => {
-          this.setState({ ...this.state, priceOfProduct: data.getProductDescription.price });
+          this.setState({
+            ...this.state,
+            priceOfProduct: data.getProductDescription.price,
+            taxOfProduct: data.getProductDescription.price * 0.21,
+          });
         }}>
         {({ loading, error, data }) => {
           if (loading) return <p>'Loading...'</p>;
@@ -60,8 +62,8 @@ export class ProductDescription extends Component {
                     <ul className={styles.sizeRowList}>
                       {data.getProductDescription.sizes.map((element) => {
                         return (
-                          <li key={element.id} className={styles.sizeRowItem}>
-                            <button>{element.size}</button>
+                          <li className={styles.sizeRowItem}>
+                            <button>{element}</button>
                           </li>
                         );
                       })}
@@ -72,8 +74,8 @@ export class ProductDescription extends Component {
                     <ul className={styles.colorRowList}>
                       {data.getProductDescription.colors.map((element) => {
                         return (
-                          <li key={element.id} className={styles.colorRowItem}>
-                            <button style={{ backgroundColor: `${element.color}` }}></button>
+                          <li className={styles.colorRowItem}>
+                            <button style={{ backgroundColor: `${element}` }}></button>
                           </li>
                         );
                       })}
@@ -83,11 +85,24 @@ export class ProductDescription extends Component {
                     <h3 className={styles.rowTitle}>price:</h3>
                     <div className={styles.currencyItem}>
                       {symbol}
-                      {currentCurency.toFixed(2)}
+                      {currentCurrency}
                     </div>
                   </div>
                   <div className={styles.configAddToCartButton}>
-                    <button onClick={this.getTargetProductHandler}>add to cart</button>
+                    <button
+                      onClick={() =>
+                        store.dispatch({
+                          type: 'GET_TARGET_PRODUCT',
+                          targetProduct: {
+                            id: Number(this.state.params),
+                            count: 1,
+                            price: this.state.priceOfProduct,
+                            tax: this.state.taxOfProduct,
+                          },
+                        })
+                      }>
+                      add to cart
+                    </button>
                   </div>
                   <div className={styles.configDescriptionBlock}>
                     {data.getProductDescription.description}
