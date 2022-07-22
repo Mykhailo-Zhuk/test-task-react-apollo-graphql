@@ -1,0 +1,186 @@
+:root {
+  --cbButton-grey: #d3d2d5;
+  --cbButton-brown: #2b2b2b;
+  --cbButton-green: #0f6450;
+  --cbButtonBorder: #5ece7b;
+}
+.configWrapper {
+  margin: 20px 100px 0 100px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-evenly;
+  gap: 20px;
+}
+.configWrapper img {
+  object-fit: scale-down;
+  width: 100%;
+  height: 100%;
+}
+.leftPhotoBlock {
+  flex: 0 0 12%;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  justify-content: flex-start;
+  height: 600px;
+  overflow-x: scroll;
+  min-width: 130px;
+}
+.leftPhotoBlock::-webkit-scrollbar {
+  display: none;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.leftPhotoItem {
+  width: 105px;
+  cursor: pointer;
+}
+.mainPhotoBlock {
+  flex: 0 1 50%;
+  height: 600px;
+  min-width: 400px;
+}
+.photoConfigBlock {
+  flex: 0 0 22%;
+  margin: 0 auto;
+  width: 315px;
+  height: 595px;
+}
+.configTitle {
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 27px;
+  margin: 40px 0;
+}
+.configTitleBrand,
+.configTitleName {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 27px;
+}
+.configTitleBrand {
+  font-weight: 600;
+}
+.configTitleName {
+  margin-top: 20px;
+}
+.rowTitle {
+  font-family: 'Roboto Condensed';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 18px;
+  color: var(--product-text-color);
+  text-transform: uppercase;
+  margin-top: 24px;
+}
+/* Size block */
+.attributesRowList {
+  display: flex;
+  gap: 12px;
+}
+.attributesRowItem {
+  width: 63px;
+  height: 45px;
+}
+.attributesRowColorItem {
+  min-width: 32px;
+  height: 32px;
+}
+.attributesRowItem button {
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  border: 1px solid var(--product-text-color);
+  font-family: 'Source Sans Pro';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 160%;
+  color: var(--nav-icon-color);
+  text-transform: uppercase;
+}
+.attributesRowColorItem button {
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+.attributesRowItem button:hover {
+  color: var(--nav-bg-color);
+  background-color: var(--nav-icon-color);
+  border: none;
+}
+.attributesRowItem .selected {
+  color: var(--nav-bg-color);
+  background-color: var(--nav-icon-color);
+  border: none;
+}
+.attributesRowColorItem button:hover {
+  border: 1px solid var(--cbButtonBorder);
+}
+.attributesRowColorItem .selected {
+  border: 1px solid var(--cbButtonBorder);
+}
+
+/* Currency item */
+.currencyItem {
+  display: flex;
+  justify-self: flex-start;
+  width: fit-content;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 18px;
+  color: var(--product-text-color);
+}
+/* Add to cart */
+.configAddToCartButton {
+  display: flex;
+  box-sizing: border-box;
+  max-width: 292px;
+  max-height: 52px;
+  background-color: var(--cbButtonBorder);
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0 40px 0;
+}
+.configAddToCartButton button {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 120%;
+  color: var(--nav-bg-color);
+  background: none;
+  border: none;
+  text-align: center;
+  text-transform: uppercase;
+  padding: 16px 32px;
+  cursor: pointer;
+}
+.configAddToCartButton:hover {
+  transition: all 1s;
+  -webkit-transition: all 1s;
+  -moz-transition: all 1s;
+  -ms-transition: all 1s;
+  -o-transition: all 1s;
+  transform: scale(0.98);
+  -webkit-transform: scale(0.98);
+  -moz-transform: scale(0.98);
+  -ms-transform: scale(0.98);
+  -o-transform: scale(0.98);
+}
+.configDescriptionBlock {
+  width: 292px;
+  height: 103px;
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 159.96%;
+  color: var(--product-text-color);
+  overflow-y: auto;
+  overflow-x: hidden;
+}

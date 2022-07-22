@@ -1,0 +1,374 @@
+/* Show product bag */
+:root {
+  --product-border-color: #e5e5e5;
+}
+.pb {
+  margin: 70px 30px;
+}
+.pbMainTitle {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 40px;
+  text-transform: uppercase;
+  color: var(--nav-icon-color);
+  padding: 0 5px;
+}
+.pbBlock {
+  display: flex;
+  flex-direction: row;
+  max-height: 235px;
+  width: 100%;
+  justify-content: space-between;
+  align-items: stretch;
+  padding: 30px 5px;
+  gap: 24px;
+  overflow: auto;
+  color: var(--nav-icon-color);
+  border-top: 2px solid var(--product-border-color);
+}
+.pbConfig {
+  display: flex;
+  flex: 1 1 70%;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 0px;
+  gap: 4px;
+  max-height: 235px;
+  width: fit-content;
+  overflow: hidden;
+}
+.pbDescription {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 0px;
+  gap: 8px;
+  overflow-y: scroll;
+}
+.pbDescription::-webkit-scrollbar {
+  display: none;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+/* Image block*/
+.pbImage {
+  position: relative;
+  flex: 0 0 25%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-height: 288px;
+  min-height: 188px;
+  max-width: 200px;
+  min-width: 140px;
+}
+.pbImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.pbTitleName,
+.pbTitleBrand {
+  width: 292px;
+  max-height: fit-content;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 27px;
+  display: flex;
+  align-items: center;
+}
+.pbTitleBrand {
+  font-weight: 600;
+}
+/* Price block */
+.pbConfigCurrencyBlock {
+  margin: 20px 0 0;
+}
+.pbCurrencyItem {
+  width: fit-content;
+  height: fit-content;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 24px;
+  text-align: left;
+  color: var(--nav-icon-color);
+}
+/* Attributes block */
+.pbConfigAttributesRow {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0px;
+  gap: 8px;
+  width: fit-content;
+  height: fit-content;
+}
+.pbRowTitle {
+  width: fit-content;
+  height: 18px;
+  font-family: 'Roboto Condensed';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 18px;
+  display: flex;
+  align-items: center;
+  color: var(--nav-icon-color);
+  text-transform: uppercase;
+}
+.pbAttributesRowList {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  padding: 0px;
+  gap: 8px;
+  margin: 7px 0 0;
+  width: fit-content;
+}
+.pbAttributesRowItem {
+  width: 63px;
+  height: 45px;
+  background: var(--nav-bg-color);
+  border: 1px solid var(--nav-icon-color);
+}
+.pbAttributesRowColorItem {
+  width: 36px;
+  height: 36px;
+}
+.pbAttributesRowItem button {
+  background: none;
+  border: none;
+  width: 100%;
+  height: 100%;
+  font-family: 'Source Sans Pro';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 160%;
+  text-transform: uppercase;
+}
+.pbAttributesRowColorItem button {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+.pbAttributesRowItem button:hover {
+  color: var(--nav-bg-color);
+  background: var(--nav-icon-color);
+  border: 1px solid var(--nav-icon-color);
+}
+.pbAttributesRowColorItem button:hover {
+  border: 1px solid var(--cbButtonBorder);
+}
+.pbAttributesRowItem .selected {
+  color: var(--nav-bg-color);
+  background: var(--nav-icon-color);
+  border: 1px solid var(--nav-icon-color);
+}
+.pbAttributesRowColorItem .selected {
+  border: 1px solid var(--cbButtonBorder);
+}
+/* Amount button block */
+.pbAmountButtons {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px;
+  gap: 32px;
+  /* width: fit-content; */
+  height: 100%;
+}
+.pbAmountIncrease,
+.pbAmountDecrease {
+  box-sizing: border-box;
+  font-size: 24px;
+  border: 1px solid var(--nav-icon-color);
+  width: 45px;
+  height: 45px;
+  background-color: transparent;
+  cursor: pointer;
+}
+.pbAmountIncrease button,
+.pbAmountDecrease button {
+  border: none;
+  width: 100%;
+  height: 100%;
+}
+.pbAmount {
+  width: fit-content;
+  height: fit-content;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 160%;
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+/* Total price */
+.pbTotalPrice {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.pbTotalPrice p {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 18px;
+  color: var(--nav-icon-color);
+}
+.pbTotalPrice div {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 160%;
+  display: flex;
+  align-items: center;
+  text-align: right;
+}
+/* Cater block */
+.pbImageCaret {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 0px;
+  gap: 8px;
+  position: absolute;
+  width: 56px;
+  height: 24px;
+  right: -5px;
+  bottom: 5px;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+}
+.pbImageCaretLeft,
+.pbImageCaretRight {
+  background-image: url('../ProductBag/ProductBagDetalies/icon/Vector.svg');
+  background-repeat: no-repeat;
+  background-position: 6px;
+  background-color: rgba(0, 0, 0, 0.73);
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+.pbImageCaretRight {
+  transform: rotate(-180deg);
+  -webkit-transform: rotate(-180deg);
+  -moz-transform: rotate(-180deg);
+  -ms-transform: rotate(-180deg);
+  -o-transform: rotate(-180deg);
+}
+.pbImageCaretLeft:hover,
+.pbImageCaretRight:hover {
+  outline: 1.5px solid var(--nav-bg-color);
+}
+/* Total price, tax and quantity block in pb block*/
+.pbTotalPriceBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0px;
+  gap: 16px;
+  border-top: 2px solid var(--product-border-color);
+}
+.pbTotalResult {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0px;
+  gap: 8px;
+  width: 198px;
+  height: 100px;
+}
+.pbTotalOrderButton {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 279px;
+  height: 43px;
+}
+.pbTotalOrderButton button {
+  border: none;
+  width: 100%;
+  height: 100%;
+  text-transform: uppercase;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 120%;
+  background: var(--cbButtonBorder);
+  color: var(--nav-bg-color);
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  -webkit-filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+}
+.pbTotalOrderButton button:hover {
+  transition: all 1s;
+  -webkit-transition: all 1s;
+  -moz-transition: all 1s;
+  -ms-transition: all 1s;
+  -o-transition: all 1s;
+  transform: scale(0.98);
+  -webkit-transform: scale(0.98);
+  -moz-transform: scale(0.98);
+  -ms-transform: scale(0.98);
+  -o-transform: scale(0.98);
+}
+.pbTotalResult {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0px;
+  gap: 8px;
+  width: 279px;
+  height: fit-content;
+}
+.pbTaxRow {
+  display: flex;
+  align-items: flex-start;
+  padding: 0px;
+  gap: 8px;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 28px;
+  width: fit-content;
+}
+.pbQuantityRow {
+  display: flex;
+  align-items: flex-start;
+  padding: 0px;
+  gap: 8px;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 28px;
+}
+.pbTotalPriceRow {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 0px;
+  gap: 44px;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 28px;
+}
+.pbTaxRow span,
+.pbTotalPriceRow span,
+.pbQuantityRow span {
+  font-weight: 700;
+}

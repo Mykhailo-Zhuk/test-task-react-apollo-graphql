@@ -3,70 +3,86 @@ import { Link } from 'react-router-dom';
 
 import './Navigation.css';
 import { Query } from '@apollo/client/react/components';
-import { GET_FILTERED_BY_IDS } from '../../query/getProduct';
+import { CATEGORIES, CURRENCIES, GET_FILTERED_BY_ID } from '../../query/getProduct';
 import ProductCartDetalies from './ProductCartDetalies/ProductCartDetalies';
 import { store } from '../../store/store';
+import { Categories } from './Categories/Categories';
+import { InStockBlock } from './inStock/InStockBlock';
 
 export class NavigationBlock extends Component {
   constructor() {
     super();
     this.state = {
       amountOfProduct: 0,
+      listOfTakingProducts: store.getState().targetProducts,
     };
-    store.subscribe(this.updateAmountOfProduct);
+    store.subscribe(this.updateProducts);
   }
-  updateAmountOfProduct = () => {
-    const amount = store.getState().targetProducts.length;
+  updateProducts = () => {
+    const newAmount = store.getState().targetProducts.length;
+    const newListOfTakingProducts = store.getState().targetProducts;
     this.setState({
-      amountOfProduct: amount,
+      amountOfProduct: newAmount,
+      listOfTakingProducts: newListOfTakingProducts,
     });
   };
-  // When your mouse over in the navigation category to target element will add 'nav_active' class, else - remove this class
-  onMouseOverHandler = (e) => {
+  addActiveClassToNav = (e) => {
     if (e.target) {
       const link = e.target;
       const siblings = link.closest('.navCategory').querySelectorAll('.navCategoryItem');
       siblings.forEach((el) => {
+        el.classList.remove('nav_active');
         if (el === link) el.classList.add('nav_active');
-        else el.classList.remove('nav_active');
       });
-    }
+    } else return;
   };
+  removeClassFromNav = (e) => {
+    const link = e.target;
+    const siblings = link.closest('.navCategory').querySelectorAll('.navCategoryItem');
+    siblings.forEach((el) => {
+      el.classList.remove('nav_active');
+    });
+  };
+  // When your mouse over in the navigation category to target element will add 'nav_active' class, else - remove this class
   render() {
+    const { currentLabel } = store.getState().convertCurency;
     const { targetProducts } = store.getState();
-    const { convertIndex, symbol } = store.getState().convertCurency;
-    const totalPrice = targetProducts
-      .map((el) => el.price * el.count)
+    const filteredListWithoutInStock = targetProducts.filter((el) => !el.inStock);
+    const totalPrice = filteredListWithoutInStock
+      .map(
+        (prod) => prod.count * prod.price.find((el) => el.currency.label === currentLabel).amount,
+      )
+      .reduce((acc, cur) => acc + cur, 0)
+      .toFixed(2);
+
+    const allCounts = filteredListWithoutInStock
+      .map((product) => product.count)
       .reduce((acc, cur) => acc + cur, 0);
-    const currentCurrency = (convertIndex * totalPrice).toFixed(2);
     return (
       <nav className="nav">
         {/* Link to category */}
-        <ul
-          className="navCategory"
-          onClick={(e) =>
-            store.dispatch({
-              type: 'FILTERED_PRODUCTS',
-              categoryOfProducts: e.target.dataset.products,
-            })
-          }
-          onMouseOver={this.onMouseOverHandler}>
-          <li className="navCategoryItem" data-products="all products">
-            all products
-          </li>
-          <li className="navCategoryItem" data-products="men's clothing">
-            men's clothing
-          </li>
-          <li className="navCategoryItem" data-products="jewelery">
-            jewelery
-          </li>
-          <li className="navCategoryItem" data-products="electronics">
-            electronics
-          </li>
-          <li className="navCategoryItem" data-products="women's clothing">
-            women's clothing
-          </li>
-        </ul>
+        <div className="navCategories">
+          <ul
+            className="navCategory"
+            onClick={(e) =>
+              store.dispatch({
+                type: 'FILTERED_PRODUCTS',
+                categoryOfProducts: e.target.dataset.categories,
+              })
+            }
+            onMouseOver={this.addActiveClassToNav}
+            onMouseOut={this.removeClassFromNav}>
+            <Query query={CATEGORIES}>
+              {({ data, error, loading }) => {
+                if (loading) return <p>'Loading...'</p>;
+                if (error) return <p>'Error! ${error.message}'</p>;
+                return data.categories.map((products, index) => {
+                  return <Categories key={index} productCategory={products.name} />;
+                });
+              }}
+            </Query>
+          </ul>
+        </div>
         <div className="store-logo"></div>
         {/* Change currency block*/}
         <div className="navCartBlock">
@@ -84,8 +100,10 @@ export class NavigationBlock extends Component {
                 })
               }>
               <li data-curency="USD">$ USD</li>
-              <li data-curency="EUR">€ EUR</li>
+              <li data-curency="GBP">£ GBP</li>
               <li data-curency="JPY">¥ JPY</li>
+              <li data-curency="AUD">A$ AUD</li>
+              <li data-curency="RUB">₽ RUB</li>
             </ul>
           </div>
           {/* Empty cart sign, open/close products cart */}
@@ -95,34 +113,47 @@ export class NavigationBlock extends Component {
           {/* Show products cart */}
           <div className="navShowProductsCart">
             <div>
-              <p className="productCartListTitle">
-                <span>My Bag</span> {this.state.amountOfProduct} items
+              <p className="pcListTitle">
+                <span>My Bag</span> {allCounts} items
               </p>
             </div>
             {/* Main cart of taking products */}
-            <Query
-              query={GET_FILTERED_BY_IDS}
-              variables={{
-                id: store.getState().targetProducts.map((product) => product.id),
-              }}>
+            {this.state.listOfTakingProducts.map((curProd) => {
+              return (
+                <Query
+                  query={GET_FILTERED_BY_ID}
+                  variables={{
+                    id: curProd.id,
+                  }}>
+                  {({ data, error, loading }) => {
+                    if (loading) return <p>'Loading...'</p>;
+                    if (error) return <p>'Error! ${error.message}'</p>;
+                    if (!data.product.inStock)
+                      return <ProductCartDetalies productItem={data.product} />;
+                    else return;
+                  }}
+                </Query>
+              );
+            })}
+            {/* Total price of taking products */}
+            <Query query={CURRENCIES}>
               {({ data, error, loading }) => {
                 if (loading) return <p>'Loading...'</p>;
                 if (error) return <p>'Error! ${error.message}'</p>;
-                return data.getFilteredByIds.map((products) => {
-                  return <ProductCartDetalies key={products.id} productItem={products} />;
-                });
+                const currency = data.currencies.find((el) => el.label === currentLabel);
+                return (
+                  <div className="pcTotalPrice">
+                    Total
+                    <span>
+                      {currency.symbol}
+                      {totalPrice}
+                    </span>
+                  </div>
+                );
               }}
             </Query>
-            {/* Total price of taking product */}
-            <div className="productCartTotalPrice">
-              <p>Total</p>
-              <p>
-                {symbol}
-                {currentCurrency}
-              </p>
-            </div>
             {/* Button link to ./cart */}
-            <div className="productCartSubmitButton">
+            <div className="pcSubmitButton">
               <Link to={'/cart'}>
                 <button
                   className="pcViewBagButton"
@@ -132,42 +163,29 @@ export class NavigationBlock extends Component {
               </Link>
               <button className="pcCheckOutButton">check out</button>
             </div>
-            {/* Block of 'out of stock' product */}
-            {this.state.amountOfProduct > 0 && (
-              <Query
-                query={GET_FILTERED_BY_IDS}
-                variables={{
-                  id: store.getState().targetProducts.map((product) => product.id),
-                }}>
-                {({ data, error, loading }) => {
-                  if (loading) return <p>'Loading...'</p>;
-                  if (error) return <p>'Error! ${error.message}'</p>;
-                  if (this.state.amountOfProduct > 0 && this.state.amountOfProduct < 3) {
-                    const outOfStock = data.getFilteredByIds[data.getFilteredByIds.length - 1];
-                    return (
-                      <div key={outOfStock.id} className="productCartOutOfStock">
-                        <p className="productCartOutOfStockLabel">Size</p>
-                        <div className="productCartOutOfStockImage">
-                          <img src={outOfStock.image} alt="Out of Stock" />
-                        </div>
-                        <div className="productCartOutOfStockContent">
-                          <p className="productCartTitle">{outOfStock.title}</p>
-                          <p className="productCartCurrencyItem">
-                            {symbol}
-                            {convertIndex * outOfStock.price}
-                          </p>
-                        </div>
-                      </div>
-                    );
-                  }
-                }}
-              </Query>
-            )}
+            {/* Block of 'in stock' product */}
+            {this.state.listOfTakingProducts.map((curProd) => {
+              return (
+                <Query
+                  query={GET_FILTERED_BY_ID}
+                  variables={{
+                    id: curProd.id,
+                  }}>
+                  {({ data, error, loading }) => {
+                    if (loading) return <p>'Loading...'</p>;
+                    if (error) return <p>'Error! ${error.message}'</p>;
+                    if (data.product.inStock) {
+                      return <InStockBlock productItem={data.product} />;
+                    } else return;
+                  }}
+                </Query>
+              );
+            })}
           </div>
           <span
             className="navChangeNumberOfProducts"
-            style={{ display: this.state.amountOfProduct !== 0 ? 'block' : 'none' }}>
-            {this.state.amountOfProduct}
+            style={{ display: allCounts !== 0 ? 'block' : 'none' }}>
+            {allCounts}
           </span>
         </div>
       </nav>

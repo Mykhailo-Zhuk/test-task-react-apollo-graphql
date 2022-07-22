@@ -2,8 +2,8 @@ const defaultState = {
   targetProducts: [],
   toggleProductsList: false,
   toggleCurrencyList: false,
-  categoryOfProducts: 'all products',
-  convertCurency: { symbol: '$', convertIndex: 1 },
+  categoryOfProducts: 'all',
+  convertCurency: { currentLabel: 'USD' },
 };
 
 export const reducer = (state = defaultState, action) => {
@@ -73,7 +73,7 @@ export const reducer = (state = defaultState, action) => {
               id: action.targetProduct.id,
               count: 1,
               price: action.targetProduct.price,
-              tax: action.targetProduct.tax,
+              inStock: action.targetProduct.inStock,
             },
           ]),
         };
@@ -84,11 +84,15 @@ export const reducer = (state = defaultState, action) => {
     case 'GET_CONVERT_CURENCY': {
       const currency = action.convertCurency;
       if (currency === 'USD') {
-        return { ...state, convertCurency: { symbol: '$', convertIndex: 1 } };
-      } else if (currency === 'EUR') {
-        return { ...state, convertCurency: { symbol: '€', convertIndex: 0.95 } };
+        return { ...state, convertCurency: { currentLabel: 'USD' } };
+      } else if (currency === 'RUB') {
+        return { ...state, convertCurency: { currentLabel: 'RUB' } };
       } else if (currency === 'JPY') {
-        return { ...state, convertCurency: { symbol: '¥', convertIndex: 135.46 } };
+        return { ...state, convertCurency: { currentLabel: 'JPY' } };
+      } else if (currency === 'AUD') {
+        return { ...state, convertCurency: { currentLabel: 'AUD' } };
+      } else if (currency === 'GBP') {
+        return { ...state, convertCurency: { currentLabel: 'GBP' } };
       }
       return { ...state };
     }

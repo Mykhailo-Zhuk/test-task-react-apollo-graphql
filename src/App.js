@@ -5,7 +5,7 @@ import './App.css';
 import AllProducts from './components/AllProductComp/AllProducts';
 import ProductDescription from './components/ProductDescription/ProductDescription';
 import NavigationBlock from './components/NavigationBlock/Navigation';
-import ProductBag from './components/ProductCart/ProductBag';
+import ProductBag from './components/ProductBag/ProductBag';
 import { store } from './store/store';
 
 class App extends Component {

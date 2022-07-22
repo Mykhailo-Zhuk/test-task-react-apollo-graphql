@@ -9,9 +9,14 @@ See some more specific information on the main requirements below. Remember - if
 - The descriptions provided in HTML format should be parsed and presented as HTML, not as plain text
 - Ability to change the currency of the store to one of the available currencies. + -->
 
-<!-- First commands:
-    -> cd server
-    -> npm run dev
-    -> cd ..
-    -> npm start
- -->
+<!--//////////////////////////////////////////////////////////////////////////////////////////////-->
+<!-- Additions:
+1. Wrong endpoint was used, please use GitHub - scandiweb/junior-react-endpoint: Endpoint for Junior Developer position test assignment to get all data                         +
+2. Wrong fonts used                                     +
+3. Selecting attributes logic not added                 +
+4. Wrong design is used for minicart                    +
+5. Not possible to select images on PDP                 +
+6. Currency switcher not working                        +
+7. Delete should happen on '-' click when qty is 1      +
+8. Navigation tabs not working                          +
+-->
